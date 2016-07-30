@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 30px;
+  font-family: 'Helvetica';
+}
+
+// Tabs
+.tab-list {
+  display: flex;
+  margin-bottom: -1px;
+}
+
+.tab-list-item {
+  padding: 12px;
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  cursor: pointer;
+
+  &.is-active {
+    border-bottom-color: #fff;
+    background-color: transparent;
+  }
+}
+
+.tab-panels {
+  border: 1px solid #ccc;
+}
+
+.tab-panel {
+  > * {
+    padding: 12px;
+  }
+}
+
+// Accordion
+.accordion-group {
+  border: 1px solid #ccc;
+}
+
+.accordion {
+  & + & {
+    border-top: 1px solid #ccc;
+  }
+}
+
+.accordion-tab {
+  padding: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.accordion-panel {
+  border-top: 1px solid #ccc;
+  background: #f1f1f1;
+}
