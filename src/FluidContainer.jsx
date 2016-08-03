@@ -5,12 +5,14 @@ import getPublicProps from './get-public-props'
 
 const privateProps = {
   tag: PropTypes.string,
-  height: PropTypes.any,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
   rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
   children: PropTypes.node.isRequired,
   beforeAnimation: PropTypes.func,
   afterAnimation: PropTypes.func
 }
+
+const noop = () => null
 
 class FluidContainer extends Component {
   static propTypes = privateProps
@@ -19,16 +21,20 @@ class FluidContainer extends Component {
     tag: 'div',
     height: 'auto',
     rmConfig: presets.noWobble,
-    beforeAnimation: () => null,
-    afterAnimation: () => null
+    beforeAnimation: noop,
+    afterAnimation: noop
   }
 
-  state = {
-    height: 0
-  }
+  constructor(props) {
+    super(props)
 
-  _heightReady = this.props.height !== 'auto'
-  _currHeight = null
+    this.state = {
+      height: 0
+    }
+
+    this._heightReady = props.height !== 'auto'
+    this._currHeight = null
+  }
 
   componentDidUpdate(lastProps, lastState) {
     // don't apply height until we have our first real measurement
