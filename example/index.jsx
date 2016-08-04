@@ -5,6 +5,53 @@ import FluidContainer from '../src/react-fluid-container'
 
 import './main.scss'
 
+class Accordion extends Component {
+  state = {
+    tabs: [{
+      tab: 'one',
+      panel: <div>Some cool content for accordion one.</div>
+    }, {
+      tab: 'two',
+      panel: <div style={{ padding: 1 }}><p>Some cool content for accordion two.</p><p>Some extra cool content for accordion two 💃</p></div>
+    }, {
+      tab: 'three',
+      panel: <div>Some cool content for accordion three.</div>
+    }]
+  }
+
+  render() {
+    const { tabs } = this.state
+    return (
+      <AriaManager type="accordion">
+        <div>
+          <h3>Accordion</h3>
+          <AriaTabList className="accordion-group">
+            {tabs.map(({ tab, panel }) =>
+              <div key={tab} className="accordion">
+                <AriaTab id={tab} className="accordion-tab">
+                  {tab}
+                </AriaTab>
+                <AriaPanel controlledBy={tab}>
+                  {(props, isActive) => (
+                    <FluidContainer
+                      {...props}
+                      height={isActive ? 'auto' : 0}
+                      style={{ overflow: 'hidden' }}
+                      className="accordion-panel"
+                    >
+                      {panel}
+                    </FluidContainer>
+                  )}
+                </AriaPanel>
+              </div>
+            )}
+          </AriaTabList>
+        </div>
+      </AriaManager>
+    )
+  }
+}
+
 class Tabs extends Component {
   state = {
     tabs: [{
@@ -14,7 +61,7 @@ class Tabs extends Component {
     }, {
       id: 't2',
       title: '👨🏿 Sam L Jackson',
-      panel: <div><h1>No man, I don't eat pork</h1><p>Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</p><p>Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.</p></div>
+      panel: <div><h1>No man, I don't eat pork</h1><p>Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</p><p>Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.</p> <Accordion/></div>
     }, {
       id: 't3',
       title: '💀 Zombiez',
@@ -79,62 +126,4 @@ class Tabs extends Component {
   }
 }
 
-class Accordion extends Component {
-  state = {
-    tabs: [{
-      tab: 'one',
-      panel: <div>Some cool content for accordion one.</div>
-    }, {
-      tab: 'two',
-      panel: <div style={{ padding: 1 }}><p>Some cool content for accordion two.</p><p>Some extra cool content for accordion two 💃</p></div>
-    }, {
-      tab: 'three',
-      panel: <div>Some cool content for accordion three.</div>
-    }]
-  }
-
-  render() {
-    const { tabs } = this.state
-    return (
-      <AriaManager type="accordion">
-        <div>
-          <h3>Accordion</h3>
-          <AriaTabList className="accordion-group">
-            {tabs.map(({ tab, panel }) =>
-              <div key={tab} className="accordion">
-                <AriaTab id={tab} className="accordion-tab">
-                  {tab}
-                </AriaTab>
-                <AriaPanel controlledBy={tab}>
-                  {(props, isActive) => (
-                    <FluidContainer
-                      {...props}
-                      height={isActive ? 'auto' : 0}
-                      style={{ overflow: 'hidden' }}
-                      className="accordion-panel"
-                    >
-                      {panel}
-                    </FluidContainer>
-                  )}
-                </AriaPanel>
-              </div>
-            )}
-          </AriaTabList>
-        </div>
-      </AriaManager>
-    )
-  }
-}
-
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Tabs/>
-        <Accordion/>
-      </div>
-    )
-  }
-}
-
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<Tabs/>, document.getElementById('app'))
