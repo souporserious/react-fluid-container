@@ -1,8 +1,9 @@
 {
   "name": "react-fluid-container",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Graceful dynamic/variable height animation.",
   "main": "lib/react-fluid-container.js",
+  "files": ["dist", "lib"],
   "scripts": {
     "build": "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
     "build:lib": "babel src --out-dir lib --stage 0",
@@ -44,7 +45,7 @@
     "react-dom": "0.14.x || ^15.0.0"
   },
   "dependencies": {
-    "react-measure": "^0.4.2",
+    "react-measure": "^0.5.0",
     "react-motion": "^0.4.4"
   },
   "devDependencies": {
