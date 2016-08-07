@@ -107,28 +107,42 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var privateProps = {
 	  tag: _react.PropTypes.string,
-	  height: _react.PropTypes.any,
+	  height: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.oneOf(['auto'])]),
 	  rmConfig: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.number),
 	  children: _react.PropTypes.node.isRequired,
 	  beforeAnimation: _react.PropTypes.func,
 	  afterAnimation: _react.PropTypes.func
 	};
 
+	var noop = function noop() {
+	  return null;
+	};
+
 	var FluidContainer = (function (_Component) {
 	  _inherits(FluidContainer, _Component);
 
-	  function FluidContainer() {
+	  _createClass(FluidContainer, null, [{
+	    key: 'propTypes',
+	    value: privateProps,
+	    enumerable: true
+	  }, {
+	    key: 'defaultProps',
+	    value: {
+	      tag: 'div',
+	      height: 'auto',
+	      rmConfig: _reactMotion.presets.noWobble,
+	      beforeAnimation: noop,
+	      afterAnimation: noop
+	    },
+	    enumerable: true
+	  }]);
+
+	  function FluidContainer(props) {
 	    var _this = this;
 
 	    _classCallCheck(this, FluidContainer);
 
-	    _get(Object.getPrototypeOf(FluidContainer.prototype), 'constructor', this).apply(this, arguments);
-
-	    this.state = {
-	      height: 0
-	    };
-	    this._heightReady = this.props.height !== 'auto';
-	    this._currHeight = null;
+	    _get(Object.getPrototypeOf(FluidContainer.prototype), 'constructor', this).call(this, props);
 
 	    this._handleMeasure = function (_ref) {
 	      var height = _ref.height;
@@ -147,6 +161,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._handleRest = function () {
 	      _this.props.afterAnimation();
 	    };
+
+	    this.state = {
+	      height: 0
+	    };
+
+	    this._heightReady = props.height !== 'auto';
+	    this._currHeight = null;
 	  }
 
 	  _createClass(FluidContainer, [{
@@ -195,24 +216,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      );
 	    }
-	  }], [{
-	    key: 'propTypes',
-	    value: privateProps,
-	    enumerable: true
-	  }, {
-	    key: 'defaultProps',
-	    value: {
-	      tag: 'div',
-	      height: 'auto',
-	      rmConfig: _reactMotion.presets.noWobble,
-	      beforeAnimation: function beforeAnimation() {
-	        return null;
-	      },
-	      afterAnimation: function afterAnimation() {
-	        return null;
-	      }
-	    },
-	    enumerable: true
 	  }]);
 
 	  return FluidContainer;
