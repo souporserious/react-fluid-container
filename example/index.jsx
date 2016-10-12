@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, Children, createElement } from 'react'
+import React, { Component, PureComponent, PropTypes, Children, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { AriaManager, AriaToggle, AriaPopover, AriaItem, AriaTabList, AriaTab, AriaPanel } from 'react-aria'
 import FluidContainer from '../src/react-fluid-container'
@@ -126,4 +126,23 @@ class Tabs extends Component {
   }
 }
 
-ReactDOM.render(<Tabs/>, document.getElementById('app'))
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <FluidContainer
+          tag="header"
+          height="auto"
+          className="site-header"
+        >
+          <h1 contentEditable>
+            React Fluid Container
+          </h1>
+        </FluidContainer>
+        <Tabs/>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))

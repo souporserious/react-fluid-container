@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, Children, createElement } from 'react'
+import React, { Component, PropTypes, Children, createElement, cloneElement } from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import Measure from 'react-measure'
 import getPublicProps from './get-public-props'
@@ -59,13 +59,27 @@ class FluidContainer extends Component {
     this.props.afterAnimation()
   }
 
+  _handleInput = (e) => {
+    const child = Children.only(this.props.children)
+
+    this._measureComponent.measure()
+
+    if (typeof child.props.onInput === 'function') {
+      child.props.onInput(e)
+    }
+  }
+
   render() {
     const { tag, height, rmConfig, children } = this.props
     const publicProps = getPublicProps(this.props, privateProps)
     const rmHeight = (height === 'auto') ? this.state.height : height
     const child = (
-      <Measure whitelist={['height']} onMeasure={this._handleMeasure}>
-        {Children.only(children)}
+      <Measure
+        ref={c => this._measureComponent = c}
+        whitelist={['height']}
+        onMeasure={this._handleMeasure}
+      >
+        {cloneElement(Children.only(children), { onInput: this._handleInput })}
       </Measure>
     )
 
