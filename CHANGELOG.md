@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.3.0
+Update to React Measure 1.0.0
+
+Account for `contentEditable`
+
 ### 0.2.0
 Update to React Measure 0.5.0
 
