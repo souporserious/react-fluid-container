@@ -1,31 +1,131 @@
-import React, { Component, PureComponent, PropTypes, Children, createElement } from 'react'
+import React, { Component, PureComponent, PropTypes, Children, createElement, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { AriaManager, AriaToggle, AriaPopover, AriaItem, AriaTabList, AriaTab, AriaPanel } from 'react-aria'
+import { Motion, spring } from 'react-motion'
 import FluidContainer from '../src/react-fluid-container'
 
 import './main.scss'
 
-const Collapse = ({ isOpen, children }) => (
-  <FluidContainer
-    height={isOpen ? 'auto' : 0 }
-    style={{ overflow: 'hidden' }}
-    children={children}
-  />
-)
+class Collapse extends Component {
+  static defaultProps = {
+    applyOverflow: true
+  }
 
-class CollapseDemo extends Component {
   state = {
-    isOpen: false
+    isAnimating: false
+  }
+
+  _handleBeforeAnimation = () => {
+    console.log('Collapse: animation started')
+    this.setState({ isAnimating: true })
+  }
+
+  _handleAfterAnimation = () => {
+    console.log('Collapse: animation complete')
+    this.setState({ isAnimating: false })
   }
 
   render() {
-    const { isOpen } = this.state
+    const { isOpen, applyOverflow, ...restProps } = this.props
+    const style = {
+      padding: 0.1 // fix leaky margins
+    }
+
+    // clip container when animating or not open
+    if (applyOverflow && (this.state.isAnimating || !isOpen)) {
+      style.overflow = 'hidden'
+    }
+
+    return (
+      <FluidContainer
+        height={isOpen ? 'auto' : 0 }
+        style={style}
+        beforeAnimation={this._handleBeforeAnimation}
+        afterAnimation={this._handleAfterAnimation}
+        {...restProps}
+      />
+    )
+  }
+}
+
+class CollapseScale extends Component {
+  state = {
+    animateChild: false
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isOpen !== nextProps.isOpen) {
+      setTimeout(() => {
+        this.setState({ animateChild: nextProps.isOpen })
+      }, nextProps.isOpen ? 0 : 0)
+    }
+  }
+
+  render() {
+    const { isOpen, children } = this.props
+    const { animateChild } = this.state
+    const config = {
+      stiffness: animateChild ? 250 : 500,
+      damping: animateChild ? 30 : 40
+    }
+
+    return (
+      <Collapse
+        isOpen={isOpen}
+        applyOverflow={false}
+        rmConfig={{
+          stiffness: 450, damping: 60
+        }}
+      >
+        <Motion
+          style={{
+            scale: spring(animateChild ? 1 : 0.98, config),
+            opacity: spring(animateChild ? 1 : 0, config)
+          }}
+        >
+          { value => {
+            const child = Children.only(children)
+
+            return cloneElement(child, {
+              style: {
+                ...child.props.style,
+                transform: `scale(${value.scale})`,
+                opacity: value.opacity
+              }
+            })
+          }}
+        </Motion>
+      </Collapse>
+    )
+  }
+}
+
+class CollapseDemo extends Component {
+  state = {
+    isOpen: false,
+    scale: true
+  }
+
+  render() {
+    const { isOpen, scale } = this.state
+    const CollapseComponent = scale ? CollapseScale : Collapse
     return (
       <div>
-        <button onClick={() => this.setState({ isOpen: !isOpen })}>
+        <button
+          style={{ marginRight: 12 }}
+          onClick={() => this.setState({ isOpen: !isOpen })}
+        >
           Toggle Collapse
         </button>
-        <Collapse isOpen={isOpen}>
+        <label>
+          use transform
+          <input
+            type="checkbox"
+            checked={scale}
+            onChange={() => this.setState({ scale: !scale })}
+          />
+        </label>
+        <CollapseComponent isOpen={isOpen}>
           <div
             style={{
               marginTop: 10,
@@ -34,9 +134,9 @@ class CollapseDemo extends Component {
               backgroundColor: '#e6ebef'
             }}
           >
-            Collapse with margin! 🎉
+            Collapse with { scale && 'transform and' } margin! 🎉
           </div>
-        </Collapse>
+        </CollapseComponent>
       </div>
     )
   }
@@ -69,15 +169,14 @@ class Accordion extends Component {
                   {tab}
                 </AriaTab>
                 <AriaPanel controlledBy={tab}>
-                  {(props, isActive) => (
-                    <FluidContainer
-                      {...props}
-                      height={isActive ? 'auto' : 0}
-                      style={{ overflow: 'hidden' }}
+                  {({ style, ...restProps }, isActive) => (
+                    <Collapse
+                      {...restProps}
+                      isOpen={isActive}
                       className="accordion-panel"
                     >
                       {panel}
-                    </FluidContainer>
+                    </Collapse>
                   )}
                 </AriaPanel>
               </div>
