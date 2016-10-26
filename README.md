@@ -69,7 +69,7 @@ Pass in any valid [React Motion config object](https://github.com/chenglou/react
 
 Only one child is allowed and is what the measurements will be based off of. This should be considered a pretty "dumb" element that is just a wrapper to measure off of. Make sure there are no margins are "hanging" outside of your elements. You can use 1px padding to avoid this.
 
-#### `beforeAnimation`: PropTypes.func(prevHeight, nextHeight)
+#### `beforeAnimation`: PropTypes.func(currentHeight, nextHeight)
 
 Callback before animation has started. Passes in previous and next heights.
 

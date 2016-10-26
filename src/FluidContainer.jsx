@@ -1,44 +1,43 @@
 import React, { Component, PropTypes, Children, createElement, cloneElement } from 'react'
 import { Motion, spring, presets } from 'react-motion'
 import Measure from 'react-measure'
-import getPublicProps from './get-public-props'
-
-const privateProps = {
-  tag: PropTypes.string,
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
-  rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
-  children: PropTypes.node.isRequired,
-  beforeAnimation: PropTypes.func,
-  afterAnimation: PropTypes.func
-}
-
-const noop = () => null
 
 class FluidContainer extends Component {
-  static propTypes = privateProps
+  static propTypes = {
+    tag: PropTypes.string,
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
+    rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
+    children: PropTypes.node.isRequired,
+    beforeAnimation: PropTypes.func,
+    afterAnimation: PropTypes.func
+  }
 
   static defaultProps = {
     tag: 'div',
     height: 'auto',
     rmConfig: presets.noWobble,
-    beforeAnimation: noop,
-    afterAnimation: noop
+    beforeAnimation: () => null,
+    afterAnimation: () => null
   }
 
   constructor(props) {
     super(props)
-
     this.state = {
       height: 0
     }
-
     this._heightReady = props.height !== 'auto'
     this._currHeight = null
+    this._firstMeasure = true
   }
 
   componentDidUpdate(lastProps, lastState) {
+    // if height has changed fire a callback before animation begins
+    if (lastProps.height !== this.props.height) {
+      this.props.beforeAnimation(lastProps.height, this.props.height)
+    }
+
     // don't apply height until we have our first real measurement
-    if (this.props.height > 0 || lastState.height > 0) {
+    if (lastState.height > 0 || this.props.height > 0) {
       this._heightReady = true
     }
   }
@@ -50,7 +49,13 @@ class FluidContainer extends Component {
       this._currHeight = height
     }
     if (height !== this.state.height) {
-      this.props.beforeAnimation(height, this.state.height)
+      // don't fire callback on first measure
+      if (!this._firstMeasure) {
+        this.props.beforeAnimation(this.state.height, height)
+      } else {
+        this._firstMeasure = false
+      }
+
       this.setState({ height })
     }
   }
@@ -70,8 +75,7 @@ class FluidContainer extends Component {
   }
 
   render() {
-    const { tag, height, rmConfig, children } = this.props
-    const publicProps = getPublicProps(this.props, privateProps)
+    const { tag, height, rmConfig, children, beforeAnimation, afterAnimation, ...restProps } = this.props
     const rmHeight = (height === 'auto') ? this.state.height : height
     const child = (
       <Measure
@@ -93,10 +97,10 @@ class FluidContainer extends Component {
       >
         { ({ _height }) =>
           createElement(tag, {
-            ...publicProps,
+            ...restProps,
             style: {
               height: this._heightReady ? _height : (this._currHeight || 'auto'),
-              ...publicProps.style
+              ...restProps.style
             }
           }, child)
         }
