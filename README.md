@@ -9,8 +9,6 @@ Graceful dynamic/variable height animation.
 
 `npm install react-fluid-container --save`
 
-`bower install react-fluid-container --save`
-
 ```html
 <script src="https://unpkg.com/react-fluid-container/dist/react-fluid-container.js"></script>
 (UMD library exposed as `ReactFluidContainer`)
