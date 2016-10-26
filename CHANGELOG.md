@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.4.2
+Fix `dist` build
+
 ### 0.4.1
 Update to React Measure 1.3.0
 
