@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.4.1
+Update to React Measure 1.3.0
+
 ### 0.4.0
 Update to React Measure 1.1.0
 
