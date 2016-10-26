@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.4.3
+Fix animation callbacks to fire at proper times
+
 ### 0.4.2
 Fix `dist` build
 
