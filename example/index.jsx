@@ -5,6 +5,43 @@ import FluidContainer from '../src/react-fluid-container'
 
 import './main.scss'
 
+const Collapse = ({ isOpen, children }) => (
+  <FluidContainer
+    height={isOpen ? 'auto' : 0 }
+    style={{ overflow: 'hidden' }}
+    children={children}
+  />
+)
+
+class CollapseDemo extends Component {
+  state = {
+    isOpen: false
+  }
+
+  render() {
+    const { isOpen } = this.state
+    return (
+      <div>
+        <button onClick={() => this.setState({ isOpen: !isOpen })}>
+          Toggle Collapse
+        </button>
+        <Collapse isOpen={isOpen}>
+          <div
+            style={{
+              marginTop: 10,
+              padding: 10,
+              borderRadius: 3,
+              backgroundColor: '#e6ebef'
+            }}
+          >
+            Collapse with margin! 🎉
+          </div>
+        </Collapse>
+      </div>
+    )
+  }
+}
+
 class Accordion extends Component {
   state = {
     tabs: [{
@@ -130,7 +167,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <FluidContainer
+        <CollapseDemo/>
+        {/*<FluidContainer
           tag="header"
           height="auto"
           className="site-header"
@@ -138,7 +176,7 @@ class App extends Component {
           <h1 contentEditable>
             React Fluid Container
           </h1>
-        </FluidContainer>
+        </FluidContainer>*/}
         <Tabs/>
       </div>
     )
