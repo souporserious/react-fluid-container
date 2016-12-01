@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.5.0
+Update to React Measure 1.4.2
+
 ### 0.4.3
 Fix animation callbacks to fire at proper times
 
