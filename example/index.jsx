@@ -27,9 +27,7 @@ class Collapse extends Component {
 
   render() {
     const { isOpen, applyOverflow, ...restProps } = this.props
-    const style = {
-      padding: 0.1 // fix leaky margins
-    }
+    const style = {}
 
     // clip container when animating or not open
     if (applyOverflow && (this.state.isAnimating || !isOpen)) {
@@ -110,7 +108,7 @@ class CollapseDemo extends Component {
     const { isOpen, scale } = this.state
     const CollapseComponent = scale ? CollapseScale : Collapse
     return (
-      <div>
+      <div style={{ margin: 12 }}>
         <button
           style={{ marginRight: 12 }}
           onClick={() => this.setState({ isOpen: !isOpen })}
@@ -149,7 +147,7 @@ class Accordion extends Component {
       panel: <div>Some cool content for accordion one.</div>
     }, {
       tab: 'two',
-      panel: <div style={{ padding: 1 }}><p>Some cool content for accordion two.</p><p>Some extra cool content for accordion two 💃</p></div>
+      panel: <div style={{ padding: 0.1 }}><p>Some cool content for accordion two.</p><p>Some extra cool content for accordion two 💃</p></div>
     }, {
       tab: 'three',
       panel: <div>Some cool content for accordion three.</div>
@@ -203,7 +201,7 @@ class Tabs extends Component {
       title: '💀 Zombiez',
       panel: <div><p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum cerebro.</p></div>
     }],
-    activeId: 'two',
+    activeId: 't2',
     height: 'auto'
   }
 
@@ -266,16 +264,16 @@ class App extends Component {
   render() {
     return (
       <div>
-        <CollapseDemo/>
-        {/*<FluidContainer
-          tag="header"
+        <FluidContainer
+          tag="div"
           height="auto"
           className="site-header"
         >
           <h1 contentEditable>
             React Fluid Container
           </h1>
-        </FluidContainer>*/}
+        </FluidContainer>
+        <CollapseDemo/>
         <Tabs/>
       </div>
     )
