@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, Children, createElement, cloneElement } from 'react'
+import React, { Component, Children, createElement, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import { Motion, spring, presets } from 'react-motion'
 import Measure from 'react-measure'
 
