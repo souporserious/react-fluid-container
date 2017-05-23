@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, Children, createElement, cloneElement } from 'react'
+import React, { Component, Children, createElement, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import { Motion, spring, presets } from 'react-motion'
 import Measure from 'react-measure'
 
@@ -9,7 +10,7 @@ class FluidContainer extends Component {
     rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
     children: PropTypes.node.isRequired,
     beforeAnimation: PropTypes.func,
-    afterAnimation: PropTypes.func
+    afterAnimation: PropTypes.func,
   }
 
   static defaultProps = {
@@ -17,13 +18,13 @@ class FluidContainer extends Component {
     height: 'auto',
     rmConfig: presets.noWobble,
     beforeAnimation: () => null,
-    afterAnimation: () => null
+    afterAnimation: () => null,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      height: 0
+      height: 0,
     }
     this._heightReady = props.height !== 'auto'
     this._currHeight = null
@@ -64,7 +65,7 @@ class FluidContainer extends Component {
     this.props.afterAnimation()
   }
 
-  _handleInput = (e) => {
+  _handleInput = e => {
     const child = Children.only(this.props.children)
 
     this._measureComponent.measure()
@@ -75,35 +76,47 @@ class FluidContainer extends Component {
   }
 
   render() {
-    const { tag, height, rmConfig, children, beforeAnimation, afterAnimation, ...restProps } = this.props
-    const rmHeight = (height === 'auto') ? this.state.height : height
+    const {
+      tag,
+      height,
+      rmConfig,
+      children,
+      beforeAnimation,
+      afterAnimation,
+      ...restProps
+    } = this.props
+    const rmHeight = height === 'auto' ? this.state.height : height
     const child = (
       <Measure
-        ref={c => this._measureComponent = c}
+        ref={c => (this._measureComponent = c)}
         whitelist={['height']}
         onMeasure={this._handleMeasure}
       >
         {cloneElement(Children.only(children), { onInput: this._handleInput })}
       </Measure>
     )
-
     return (
       <Motion
         defaultStyle={{ _height: rmHeight }}
         style={{
-          _height: spring(rmHeight, { precision: 0.5, ...rmConfig })
+          _height: spring(rmHeight, { precision: 0.5, ...rmConfig }),
         }}
         onRest={this._handleRest}
       >
-        { ({ _height }) =>
-          createElement(tag, {
-            ...restProps,
-            style: {
-              height: this._heightReady ? _height : (this._currHeight || 'auto'),
-              ...restProps.style
-            }
-          }, child)
-        }
+        {({ _height }) =>
+          createElement(
+            tag,
+            {
+              ...restProps,
+              style: {
+                height: this._heightReady
+                  ? _height
+                  : this._currHeight || 'auto',
+                ...restProps.style,
+              },
+            },
+            child
+          )}
       </Motion>
     )
   }
