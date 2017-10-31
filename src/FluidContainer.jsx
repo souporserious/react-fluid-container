@@ -7,7 +7,7 @@ class FluidContainer extends Component {
   static propTypes = {
     tag: PropTypes.string,
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
-    rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
+    rmConfig: PropTypes.objectOf(PropTypes.number),
     children: PropTypes.node.isRequired,
     beforeAnimation: PropTypes.func,
     afterAnimation: PropTypes.func,
