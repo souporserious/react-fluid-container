@@ -9,9 +9,6 @@ import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import {
   AriaManager,
-  AriaToggle,
-  AriaPopover,
-  AriaItem,
   AriaTabList,
   AriaTab,
   AriaPanel,

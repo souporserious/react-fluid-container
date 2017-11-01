@@ -7,7 +7,7 @@ class FluidContainer extends Component {
   static propTypes = {
     tag: PropTypes.string,
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf(['auto'])]),
-    rmConfig: React.PropTypes.objectOf(React.PropTypes.number),
+    rmConfig: PropTypes.objectOf(PropTypes.number),
     children: PropTypes.node.isRequired,
     beforeAnimation: PropTypes.func,
     afterAnimation: PropTypes.func,
@@ -43,7 +43,7 @@ class FluidContainer extends Component {
     }
   }
 
-  _handleMeasure = ({ height }) => {
+  _handleMeasure = ({ bounds: { height } }) => {
     // store the height so we can apply it to the element immediately
     // and avoid any element jumping
     if (height > 0) {
@@ -88,13 +88,17 @@ class FluidContainer extends Component {
     const rmHeight = height === 'auto' ? this.state.height : height
     const child = (
       <Measure
-        ref={c => (this._measureComponent = c)}
         whitelist={['height']}
-        onMeasure={this._handleMeasure}
+        onResize={args => this._handleMeasure(args)}
+        bounds
       >
-        {cloneElement(Children.only(children), { onInput: this._handleInput })}
+        {({ measureRef }) =>
+          cloneElement(Children.only(children), {
+            onInput: this._handleInput,
+            ref: node => measureRef(node),
+          })}
       </Measure>
-    )
+    );
     return (
       <Motion
         defaultStyle={{ _height: rmHeight }}
